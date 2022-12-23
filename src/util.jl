@@ -100,6 +100,9 @@ end
 quote_string(s) = "'$s'"
 
 function run_suppress(cmd; out = false)
+
+    @warn cmd
+    
     if get(ENV, "JULIA_DEBUG", nothing) == string(@__MODULE__)
         return out ? read(cmd, String) : (run(cmd); nothing)
     end

@@ -43,6 +43,8 @@ in {
       alejandra
       nixUnstable
       nix-prefetch
+      nix-prefetch-git
+      jq
       cacert # Needed for network access
     ];
   env = [

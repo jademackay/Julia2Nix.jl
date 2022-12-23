@@ -67,9 +67,24 @@ function fetch_sha256(fetcher::Fetcher, opts::Options)
                { nixpkgs ? <nixpkgs> }:
                let pkgs = import nixpkgs { };
                in with pkgs; $(fetcher.name)
-           """
-    cmd = `nix-prefetch $expr $(parsed)`
-    @debug cmd
+           """1
+    cmd = if any(x->occursin("package-",x),parsed)
+        #`nix-prefetch-git $(parsed) | jq ".sha256"`
+        # TODO: only include necessary args
+        `nix-prefetch-git $(parsed)`
+    else
+        `nix-prefetch $expr $(parsed)`
+    end
+    
+    
+    # cmd = `nix-prefetch $expr $(parsed)`
+
+    @debug "cmd" cmd
+    @debug "expr" expr
+    @debug "parsed" parsed
+    @warn ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+"
     return strip(run_suppress(cmd; out = true))
 end
 
