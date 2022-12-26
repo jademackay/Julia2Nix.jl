@@ -67,11 +67,14 @@ function fetch_sha256(fetcher::Fetcher, opts::Options)
                { nixpkgs ? <nixpkgs> }:
                let pkgs = import nixpkgs { };
                in with pkgs; $(fetcher.name)
-           """1
+           """
     cmd = if any(x->occursin("package-",x),parsed)
-        #`nix-prefetch-git $(parsed) | jq ".sha256"`
+        @debug "yo"
+        args = Dict(replace(parsed[i],"--"=>"") => parsed[i+1] for i in 1:2:length(parsed))
+        @debug args
+        pipeline(`nix-prefetch-git --hash-algo $(args["hash-algo"]) --rev $(args["rev"]) --url $(args["url"]) --quiet`, `jq ".sha256"`)
         # TODO: only include necessary args
-        `nix-prefetch-git $(parsed)`
+        # TODO: Maybe establish all this stuff in Fetcher... dispatch of actual Git <: Fetcher or Url <: Fetcher
     else
         `nix-prefetch $expr $(parsed)`
     end
