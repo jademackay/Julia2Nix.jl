@@ -75,7 +75,7 @@ in {
     inherit src;
     name = "Example-Project";
     package = cell.lib.julia-wrapped {
-      extraBuildInputs = with inputs.nixpkgs; [alejandra nixUnstable nix-prefetch cacert];
+      extraBuildInputs = with inputs.nixpkgs; [alejandra nixUnstable nix-prefetch nix-prefetch-git cacert];
       makeWrapperArgs = [
         "--set NIX_PATH nixpkgs=${inputs.nixpkgs.path}"
       ];
